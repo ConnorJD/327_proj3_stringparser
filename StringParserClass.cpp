@@ -47,10 +47,10 @@ using namespace KP_StringParserClass;
 		else if (pDataToSearchThru == NULL) {
 			return ERROR_DATA_NULL;
 		}
-		myVector.clear();
+
 		int count = 0;
 		std::string data = "";
-		while (pStartTag[count] != *pEndTag) {
+		while (pStartTag[count + strlen(pStartTag)] != *pEndTag) {
 			data += pStartTag[count];
 			count++;
 		}
