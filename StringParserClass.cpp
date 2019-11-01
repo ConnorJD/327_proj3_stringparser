@@ -9,7 +9,7 @@
 #include <string.h>
 #include "../327_proj3_test/includes/StringParserClass.h"
 #include "../327_proj3_test/includes/constants.h"
-
+using namespace std;
 using namespace KP_StringParserClass;
 
 	char *pStartTag;
@@ -41,6 +41,7 @@ using namespace KP_StringParserClass;
 
 	int StringParserClass::getDataBetweenTags(char *pDataToSearchThru,
 			std::vector<std::string> &myVector) {
+		myVector.clear();
 		if (pStartTag == NULL || pEndTag == NULL || pStartTag == 0 || pEndTag == 0) {
 			return ERROR_TAGS_NULL;
 		}
@@ -48,13 +49,33 @@ using namespace KP_StringParserClass;
 			return ERROR_DATA_NULL;
 		}
 
-		int count = 0;
-		std::string data = "";
-		while (pStartTag[count + strlen(pStartTag)] != *pEndTag) {
-			data += pStartTag[count];
-			count++;
+		while (*pDataToSearchThru != '\0') {
+			std::string data = "";
+			bool found = true;
+			char *pStartCopy = new char[strlen(pStartTag)];
+			strncpy(pStartCopy, pStartTag, strlen(pStartTag));
+			if(*pDataToSearchThru == '<') {
+				while(*pStartCopy != '>') {
+					if (*pDataToSearchThru != *pStartCopy) {
+						found = false;
+					}
+					pStartCopy++;
+					pDataToSearchThru++;
+				}
+				if(found) {
+					pDataToSearchThru++;
+					while(*pDataToSearchThru != '<') {
+						data += *pDataToSearchThru;
+						pDataToSearchThru++;
+					}
+					myVector.push_back(data);
+					data = "";
+				}
+			}
+			else {
+				pDataToSearchThru++;
+			}
 		}
-		myVector.push_back(data);
 		return SUCCESS;
 	}
 
